@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flame/components.dart';
@@ -9,12 +8,12 @@ import 'package:flappybird/components/pipe.dart';
 class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
 
   double pipeSpawnTimer=0;
+  final double maxTopPipeHeight = 300; // Add this line to set an upper limit for the top pipe height
 
   @override 
   void update( double dt){
     pipeSpawnTimer +=dt;
-    const double pipeInterval =50;
-
+   
     if(pipeSpawnTimer> pipeInterval){
       pipeSpawnTimer=0;
       spawnPipe();
@@ -25,18 +24,13 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
 
 void spawnPipe(){
   final double screenHeight =gameRef.size.y;
-  const double pipeGap = 150;
-  const double minPipeHeight = 50;
-  const double pipeWidth=60;
-  
-
 
 final double maxPipeHeight
  = screenHeight - pipeGap - minPipeHeight;
 final double bottomPipeHeight
  = minPipeHeight + Random().nextDouble() * (maxPipeHeight-minPipeHeight);
 final double topPipeHeight 
-= screenHeight - groundHeight - bottomPipeHeight -pipeGap;
+= min(maxTopPipeHeight, screenHeight - groundHeight - bottomPipeHeight -pipeGap);
 
 
 //create bottom pipe
